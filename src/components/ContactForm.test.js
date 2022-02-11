@@ -9,10 +9,10 @@ let firstName, lastName, email, message, submitBtn, error
 
 beforeEach(() => {
     render (<ContactForm/>)
-     firstName = screen.getByLabelText('First Name', {exact: false})
-     lastName = screen.getByLabelText('last Name', {exact: false})
-     email = screen.getByLabelText('email', {exact: false})
-     message = screen.getByLabelText('message', {exact: false})
+     firstName = screen.getByLabelText(/First Name/i)
+     lastName = screen.getByLabelText(/last Name/i)
+     email = screen.getByLabelText(/email/i)
+     message = screen.getByLabelText(/message/i)
      submitBtn = screen.getByRole('button')
 
     //  error = screen.getAllByText(/error/i)
@@ -54,11 +54,23 @@ test('renders THREE error messages if user enters no values into any fields.', a
 });
 
 test('renders ONE error message if user enters a valid first name and last name but no email.', async () => {
-    
+    userEvent.type(firstName, 'adekunle')
+    userEvent.type(lastName, 'shennaike')
+    userEvent.type(email, '')
+    userEvent.click(submitBtn)
+
+    const error = screen.getAllByTestId('error')
+
+    expect(error).toHaveLength(1)
 });
 
 test('renders "email must be a valid email address" if an invalid email is entered', async () => {
-    
+    userEvent.type(email, 'masterfujihs')
+
+    const error = screen.getByText(/email must be a valid email address./i)
+
+    expect(error).toBeInTheDocument()
+    expect(error).toBeVisible()
 });
 
 test('renders "lastName is a required field" if an last name is not entered and the submit button is clicked', async () => {
