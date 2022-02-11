@@ -14,7 +14,7 @@ beforeEach(() => {
      email = screen.getByLabelText(/email/i)
      message = screen.getByLabelText(/message/i)
      submitBtn = screen.getByRole('button')
-
+    
     //  error = screen.getAllByText(/error/i)
 });
 
@@ -71,15 +71,59 @@ test('renders "email must be a valid email address" if an invalid email is enter
 
     expect(error).toBeInTheDocument()
     expect(error).toBeVisible()
+    
 });
 
 test('renders "lastName is a required field" if an last name is not entered and the submit button is clicked', async () => {
-    
+    userEvent.type(lastName, '')
+    userEvent.click(submitBtn)
+
+    const error = screen.getByText(/lastName is a required field./i)
+
+    expect(error).toBeInTheDocument()
+    expect(error).toBeVisible()
 });
 
 test('renders all firstName, lastName and email text when submitted. Does NOT render message if message is not submitted.', async () => {
-    
+    userEvent.type(firstName, 'adekunle')
+    userEvent.type(lastName, 'shennaike')
+    userEvent.type(email, 'masterfuji23@gmail.com')
+    userEvent.type(message, '')
+    userEvent.click(submitBtn)
+
+    const firstnameDisplay = screen.getByTestId('firstnameDisplay')
+    const lastnameDisplay = screen.getByTestId('lastnameDisplay')
+    const emailDisplay = screen.getByTestId('emailDisplay')
+    // const messageDisplay = screen.getByTestId('messageDisplay')
+
+    expect(firstnameDisplay).toBeInTheDocument()
+    expect(firstnameDisplay).toBeVisible()
+    expect(lastnameDisplay).toBeInTheDocument()
+    expect(lastnameDisplay).toBeVisible()
+    expect(emailDisplay).toBeInTheDocument()
+    expect(emailDisplay).toBeVisible()
+    // expect(messageDisplay).not.toBeInTheDocument()
+    // expect(messageDisplay).not.toBeVisible()
 });
 
 test('renders all fields text when all fields are submitted.', async () => {
+    userEvent.type(firstName, 'adekunle')
+    userEvent.type(lastName, 'shennaike')
+    userEvent.type(email, 'masterfuji23@gmail.com')
+    userEvent.type(message, 'this better work')
+    userEvent.click(submitBtn)
+    
+    const firstnameDisplay = screen.getByTestId('firstnameDisplay')
+    const lastnameDisplay = screen.getByTestId('lastnameDisplay')
+    const emailDisplay = screen.getByTestId('emailDisplay')
+    const messageDisplay = screen.getByTestId('messageDisplay')
+    
+    expect(firstnameDisplay).toBeInTheDocument()
+    expect(firstnameDisplay).toBeVisible()
+    expect(lastnameDisplay).toBeInTheDocument()
+    expect(lastnameDisplay).toBeVisible()
+    expect(emailDisplay).toBeInTheDocument()
+    expect(emailDisplay).toBeVisible()
+    expect(messageDisplay).toBeInTheDocument()
+    expect(messageDisplay).toBeVisible()
 });
